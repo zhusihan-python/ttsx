@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block navbar %}
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('main.home') }}">主页</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('main.logout') }}">登出</a></li>
+            {% else %}
+             <li><a href="{{ url_for('main.login') }}">登入</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('main.home') }}">注册</a></li>
+        </ul>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>欢迎来到 {{ name }}!</h1>
+        <img src="http://www.tjqb.com/fileRepository/apath/source/jH0kpbT3TE6lSLPDETcmcg.jpg" class="img-rounded">
+    </div>
+</div>
+{% endblock %}
