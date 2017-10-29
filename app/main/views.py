@@ -3,12 +3,15 @@ from flask import render_template, url_for, redirect, flash
 
 from app.model import User
 from . import main
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 from flask_login import login_required, login_user, logout_user
 import sys
+from app import db
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+
 
 @main.route('/')
 def home():
@@ -36,3 +39,16 @@ def logout():
     logout_user()
     flash('您已经退出登录状态')
     return redirect(url_for('main.home'))
+
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('现在可以登录了.')
+        return redirect(url_for('main.login'))
+    return render_template('register.html', form=form)
