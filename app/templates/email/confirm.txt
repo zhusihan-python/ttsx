@@ -1,0 +1,13 @@
+Dear {{ user.username }},
+
+Welcome to TTSX!
+
+To confirm your account please click on the following link:
+
+{{ url_for('main.confirm', token=token, _external=True) }}
+
+Sincerely,
+
+The TTSX Team
+
+Note: replies to this mail address are not monitored.

@@ -1,5 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 from . import db
 
 
@@ -17,6 +19,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255))
     password_hash = db.Column(db.String(255))
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id'))
+    confirmed = db.Column(db.Boolean, default=False)
     #when dataengine get data from database then it create instance like User(**data)
     # (there are also can be problem with id) should init like this
     def __init__(self, password=None, **data):
@@ -37,6 +40,23 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User '{}'>".format(self.username)
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
+
 
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

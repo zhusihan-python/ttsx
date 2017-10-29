@@ -19,4 +19,13 @@
         <img src="http://www.tjqb.com/fileRepository/apath/source/jH0kpbT3TE6lSLPDETcmcg.jpg" class="img-rounded">
     </div>
 </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class=flashes>
+            {% for category, message in messages %}
+                <li>{{ category }}:{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 {% endblock %}

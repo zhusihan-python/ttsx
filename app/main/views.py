@@ -4,9 +4,10 @@ from flask import render_template, url_for, redirect, flash
 from app.model import User
 from . import main
 from .forms import LoginForm, RegistrationForm
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 import sys
 from app import db
+from .email import send_email
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -49,6 +50,19 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('现在可以登录了.')
+        token = user.generate_confirmation_token()
+        send_email(user.email, 'Confirm Your Account', 'email/confirm', user=user, token=token)
+        flash('确认邮件已发送到您的邮箱.')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
+
+@main.route('/confirm/<token>')
+@login_required
+def confirm(token):
+    if current_user.confirmed:
+        return redirect(url_for('main.home'))
+    if current_user.confirm(token):
+        flash('您已经认证了您的账户，感谢！')
+    else:
+        flash('确认链接无效或已过期。')
+    return redirect(url_for('main.home'))
