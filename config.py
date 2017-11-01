@@ -19,9 +19,9 @@ class ProdConfig(Config):
 class DevConfig(Config):
     DEBUG = True
     MIAL_SERVER = 'smtp.163.com'
-    MAIL_PORT = 994
-    MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
+    MAIL_PORT = 25
+    MAIL_USE_TLS = True
+    # MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or\
