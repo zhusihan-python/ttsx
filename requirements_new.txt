@@ -2,7 +2,7 @@ alembic==0.9.6
 asn1crypto==0.22.0
 backports-abc==0.5
 backports.shutil-get-terminal-size==1.0.0
-bleach==2.1.1
+bleach==3.1.4
 blinker==1.4
 CacheControl==0.12.3
 certifi==2017.7.27.1
